@@ -23,9 +23,7 @@ public class RestApiTest {
 
     @Test
     public void testApiResponseOnURLExpansion() throws Exception {
-
-        // TODO:: the url expander is not in place,at the moment a hardwired url is returned
-        mockHost.perform(get("/url/dummy"))
+        mockHost.perform(get("/url/2DxAzfF5"))
                 .andExpect(status().isMovedPermanently())
                 .andExpect(header().string("Location", "http://www.google.com"));
     }
@@ -33,12 +31,11 @@ public class RestApiTest {
     @Test
     public void testApiResponseOnURLShortening() throws Exception {
 
-        // TODO:: the url shortener is not in place,at the moment a hardwired url is returned
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("url", "http://www.google.com");
         mockHost.perform(post("/url").contentType("application/x-www-form-urlencoded").params(params))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(is("http://pico.url/ab23Jl")));
+                .andExpect(content().string(is("http://pico.url/2DxAzfF5")));
     }
 }
 

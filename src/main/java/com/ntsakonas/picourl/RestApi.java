@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class RestApi {
 
     private final UrlShortener urlShortener;
     private final UrlExpander urlExpander;
+    private final String HOST = "http://pico.url/";
 
     @Autowired
     public RestApi(UrlShortener urlShortener, UrlExpander urlExpander) {
@@ -28,8 +30,11 @@ public class RestApi {
     @PostMapping(path = "/url",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<String> shortenUrl(@RequestParam Map<String, String> requestParameters) {
-        String shortUrl = urlShortener.shortenUrl(requestParameters.get("url"));
-        return new ResponseEntity<>(shortUrl, HttpStatus.CREATED);
+        Optional<String> shortUrl = urlShortener.shortenUrl(requestParameters.get("url"));
+        if (shortUrl.isPresent())
+            return new ResponseEntity<>(HOST + shortUrl.get(), HttpStatus.CREATED);
+        else
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping(value = "/url/{shortUrl}")

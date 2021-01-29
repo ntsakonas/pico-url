@@ -7,8 +7,13 @@ import org.springframework.stereotype.Component;
 public class BeanFactory {
 
     @Bean
-    public UrlShortener getUrlShortener() {
-        return new UrlShortener();
+    public ShortenedUrlRepository getUrlRepository() {
+        return new ShortenedUrlRepository();
+    }
+
+    @Bean
+    public UrlShortener getUrlShortener(ShortenedUrlRepository repository) {
+        return new UrlShortener(repository);
     }
 
     @Bean
