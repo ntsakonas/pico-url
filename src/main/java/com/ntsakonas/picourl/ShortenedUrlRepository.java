@@ -41,22 +41,24 @@ public class ShortenedUrlRepository {
     private final Map<String, String> imMemCache = new HashMap<>();
     // longUrl->shortUrl
     private final Map<String, String> imMemReverseCache = new HashMap<>();
+    // set of all the hashvalues that have been used
+    private final Set<Long> usedHashValues = new HashSet<>();
 
     private final RepositoryStats stats = new RepositoryStats();
 
 
     public Set<Long> getHashValues(List<Long> shortHashValues) {
-        Set<Long> usedValues = new HashSet<>() {{
-            // add(7835846572003L);
-            // add(467513369371L);
-        }};
+        // given the input list of hashvalues, return the ones that are in use
+        Set<Long> usedValues = new HashSet<>(shortHashValues);
+        usedValues.retainAll(usedHashValues);
         stats.lookup();
-        return usedValues;
+        return Collections.unmodifiableSet(usedValues);
     }
 
     public void saveShortenedUrl(String longUrl, String shortUrl, long hashValue) {
         imMemCache.put(shortUrl, longUrl);
         imMemReverseCache.put(longUrl, shortUrl);
+        usedHashValues.add(hashValue);
         stats.write();
     }
 
