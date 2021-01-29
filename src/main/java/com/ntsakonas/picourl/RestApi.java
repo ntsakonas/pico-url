@@ -6,13 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @RestController
 public class RestApi {
@@ -31,6 +29,7 @@ public class RestApi {
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<String> shortenUrl(@RequestParam Map<String, String> requestParameters) {
         Optional<String> shortUrl = urlShortener.shortenUrl(requestParameters.get("url"));
+        urlShortener.stats();
         if (shortUrl.isPresent())
             return new ResponseEntity<>(HOST + shortUrl.get(), HttpStatus.CREATED);
         else
@@ -38,13 +37,14 @@ public class RestApi {
     }
 
     @GetMapping(value = "/url/{shortUrl}")
-    public ResponseEntity<String> expandUrl(String shortUrl) {
-        String expandedUrl = urlExpander.expandUrl(shortUrl);
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add(HttpHeaders.LOCATION, expandedUrl);
-        ResponseEntity<String> response = new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
-
-        return response;
+    public ResponseEntity<String> expandUrl(@PathVariable("shortUrl") String shortUrl) {
+        Optional<String> expandedUrl = urlExpander.expandUrl(shortUrl);
+        urlExpander.stats();
+        return expandedUrl.map((Function<String, ResponseEntity<String>>) url -> {
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add(HttpHeaders.LOCATION, url);
+            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
 
