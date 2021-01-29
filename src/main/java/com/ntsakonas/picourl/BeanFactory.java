@@ -17,7 +17,7 @@ public class BeanFactory {
     }
 
     @Bean
-    UrlExpander getUrlExpander() {
-        return new UrlExpander();
+    UrlExpander getUrlExpander(ShortenedUrlRepository repository) {
+        return new UrlExpander(repository);
     }
 }
