@@ -12,6 +12,17 @@ import static com.ntsakonas.picourl.HashingHelper.stringToBytes;
 
 public class UrlShortener {
 
+    private static class HashPair {
+
+        final Long hashValue;
+        final String shortUrl;
+
+        private HashPair(Long hashValue, String shortUrl) {
+            this.hashValue = hashValue;
+            this.shortUrl = shortUrl;
+        }
+    }
+
     private final static String RETRY_SUFFIX = "Z&Ks5P}K+-'#[2d<gx#Ma)zccj.@C&u";
     private final int SHORT_URL_LENGTH = 8;
 
@@ -25,14 +36,25 @@ public class UrlShortener {
         this.shortenedUrlRepository = shortenedUrlRepository;
     }
 
-
     public Optional<String> shortenUrl(String longUrl) {
+        // check whether the long url is already shortened
+        Optional<String> alreadyShortenedUrl = shortenedUrlRepository.getShortUrl(longUrl);
+        return alreadyShortenedUrl.or(() -> {
+
+            Optional<HashPair> shortUrlPair = shortenUrlWithRetry(longUrl);
+            shortUrlPair.ifPresent(hashPair -> shortenedUrlRepository.saveShortenedUrl(longUrl, hashPair.shortUrl, hashPair.hashValue));
+
+            return shortUrlPair.flatMap(hashPair -> Optional.of(hashPair.shortUrl));
+        });
+    }
+
+    private Optional<HashPair> shortenUrlWithRetry(String longUrl) {
         // attempt to shorten the url, if it fails then append a random string and try again
         return createShortUrl(longUrl)
                 .or(() -> createShortUrl(longUrl + RETRY_SUFFIX));
     }
 
-    private Optional<String> createShortUrl(String longUrl) {
+    private Optional<HashPair> createShortUrl(String longUrl) {
         try {
             String urlHash = hashUrl(longUrl);
             // it would be enough to get the first 5.5 bytes of the hash and map it to the short url
@@ -54,7 +76,7 @@ public class UrlShortener {
             Set<Long> usedValues = shortenedUrlRepository.getHashValues(shortHashValues);
             if (usedValues.isEmpty()) {
                 // none of the sub-hashes is used, easy case, we use the first part of the calculated hash value
-                return Optional.of(base62Encode(hashValue));
+                return Optional.of(new HashPair(hashValue, base62Encode(hashValue)));
             } else {
                 shortHashValues.removeAll(usedValues);
                 if (shortHashValues.isEmpty()) {
@@ -64,10 +86,10 @@ public class UrlShortener {
                 }
                 if (shortHashValues.contains(hashValue)) {
                     // if the first part is unused, prefer that
-                    return Optional.of(base62Encode(hashValue));
+                    return Optional.of(new HashPair(hashValue, base62Encode(hashValue)));
                 } else {
                     //otherwise, anything works
-                    return Optional.of(base62Encode(shortHashValues.get(0)));
+                    return Optional.of(new HashPair(shortHashValues.get(0), base62Encode(shortHashValues.get(0))));
                 }
             }
 
@@ -84,7 +106,6 @@ public class UrlShortener {
         return Base62Encoder.base62Encode(hashValue.longValue(), SHORT_URL_LENGTH);
     }
 
-
     private List<Long> expandHash(String urlHash) {
         /*
           the hashValue is 64 bytes long
@@ -98,9 +119,12 @@ public class UrlShortener {
         return shortHashValues;
     }
 
-
     private String hashUrl(String longUrl) throws NoSuchAlgorithmException {
         return bytesToHexString(MessageDigest.getInstance(DIGEST_ALGORITHM).digest(stringToBytes(longUrl)));
     }
 
+    public void stats() {
+        System.out.println("Stats after shortening url");
+        shortenedUrlRepository.showStats();
+    }
 }
