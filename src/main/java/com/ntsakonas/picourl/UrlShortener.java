@@ -2,13 +2,17 @@ package com.ntsakonas.picourl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.ntsakonas.picourl.HashingHelper.bytesToHexString;
 import static com.ntsakonas.picourl.HashingHelper.stringToBytes;
 
 public class UrlShortener {
 
+    private final static String RETRY_SUFFIX = "Z&Ks5P}K+-'#[2d<gx#Ma)zccj.@C&u";
     private final int SHORT_URL_LENGTH = 8;
 
     private final String DIGEST_ALGORITHM = "SHA-512";
@@ -25,7 +29,7 @@ public class UrlShortener {
     public Optional<String> shortenUrl(String longUrl) {
         // attempt to shorten the url, if it fails then append a random string and try again
         return createShortUrl(longUrl)
-                .or(() -> createShortUrl(longUrl + String.valueOf(UUID.randomUUID())));
+                .or(() -> createShortUrl(longUrl + RETRY_SUFFIX));
     }
 
     private Optional<String> createShortUrl(String longUrl) {
