@@ -95,7 +95,9 @@ public class RestApiTest {
         params.remove("url");
         params.add("url", "https://www.this-is-a-long-url-that-is-made-up-just-to-consume-enough-space-to-reach-near-the-limit-of-the-shortening-service-and-see-it-that-fails.com");
         mockHost.perform(post("/url").contentType("application/x-www-form-urlencoded").params(params))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(is("Sorry, we can only shorten URLs up to 150 characters long")));
+
     }
 }
 

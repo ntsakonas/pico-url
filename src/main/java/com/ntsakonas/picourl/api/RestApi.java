@@ -40,7 +40,7 @@ public class RestApi {
     public ResponseEntity<String> shortenUrl(@RequestParam Map<String, String> requestParameters) {
         String longUrl = requestParameters.get("url");
         if (longUrl == null || longUrl.length() > MAX_URL_LENGTH || longUrl.isEmpty() || longUrl.isBlank())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(String.format("Sorry, we can only shorten URLs up to %d characters long", MAX_URL_LENGTH), HttpStatus.BAD_REQUEST);
 
         Optional<String> shortUrl = urlShortener.shortenUrl(longUrl);
         urlShortener.stats();
