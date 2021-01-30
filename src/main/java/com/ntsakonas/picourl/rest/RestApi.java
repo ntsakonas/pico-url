@@ -14,6 +14,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+/*
+ Rest API to access the URL shortener.
+ NOTE: the shortening assumes that the owner has a registered domain that
+ is used in the returned URL. For this implementation an unregistered URL is used.
+ */
 @RestController
 public class RestApi {
 

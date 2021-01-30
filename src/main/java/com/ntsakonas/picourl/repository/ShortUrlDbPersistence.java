@@ -12,6 +12,7 @@ import java.util.Set;
 
 /*
  Interface to the database where the information about the shortened urls is saved
+ (this is not exposed to the app, but is wrapped and its types unpacked)
  */
 @Repository
 public interface ShortUrlDbPersistence extends JpaRepository<ShortenedUrl, Long> {

@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/*
+ Application level interfacing to the persistence layer.
+*/
 public interface ShortUrlPersistence {
 
     Set<Long> findByHashIn(List<Long> hashValues);

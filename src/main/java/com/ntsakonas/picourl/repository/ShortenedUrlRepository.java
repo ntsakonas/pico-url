@@ -2,8 +2,16 @@ package com.ntsakonas.picourl.repository;
 
 import java.util.*;
 
+/*
+  The repository provides the connection of the core to the short URL persistence.
+  Upon construction it can be configured to use the DB or an in-mem storage.
+
+*/
 public class ShortenedUrlRepository {
 
+    /*
+        Simplistic statistics to keep track of DB hit/miss and query/write rate
+    */
     private static class RepositoryStats {
 
         int numOfLookups = 0;

@@ -4,6 +4,9 @@ import com.ntsakonas.picourl.repository.ShortenedUrlRepository;
 
 import java.util.Optional;
 
+/*
+  Converts a short URL back to the original long URL via DB lookup.
+*/
 public class UrlExpander {
 
     private final ShortenedUrlRepository shortenedUrlRepository;

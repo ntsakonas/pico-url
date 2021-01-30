@@ -4,6 +4,7 @@ import java.util.*;
 
 /*
    This can be used for in-memory storage (useful for testing)
+   (the in-memory cache does not support expiration)
  */
 public class InMemCache implements ShortUrlPersistence {
 

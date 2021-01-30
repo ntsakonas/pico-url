@@ -12,6 +12,12 @@ import java.util.Set;
 import static com.ntsakonas.picourl.core.HashingHelper.bytesToHexString;
 import static com.ntsakonas.picourl.core.HashingHelper.stringToBytes;
 
+/*
+ Converts a long URL (up to 150 characters) to a short form (up to 8 characters).
+ The shortening is guaranteed to either be unique or fail.
+
+ No 2 short URLs map to the same long URL and no 2 long URLs map to the same short URL.
+*/
 public class UrlShortener {
 
     private static class HashPair {

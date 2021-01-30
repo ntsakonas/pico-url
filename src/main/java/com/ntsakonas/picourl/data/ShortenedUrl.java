@@ -5,8 +5,9 @@ import lombok.Data;
 import javax.persistence.*;
 
 /*
- A full entry of a shortened url
- */
+ A full entry of a shortened url in the DB (very rarely we retrieve the whole entry)
+ most operations use only specific columns when querying the DB.
+*/
 
 @Entity
 @Table(name = "shortened_urls")

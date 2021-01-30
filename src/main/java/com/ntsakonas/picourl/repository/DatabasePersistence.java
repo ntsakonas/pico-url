@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /*
- Interface to the database where the information about the shortened urls is saved
+ Interface to the database where the information about the shortened URLs is saved
  */
 @Component
 public class DatabasePersistence implements ShortUrlPersistence {
@@ -54,9 +54,11 @@ public class DatabasePersistence implements ShortUrlPersistence {
     @Override
     public Optional<String> findLongUrlByShortUrl(String shortUrl) {
         LongUrlOnly longUrl = dbPersistence.findLongUrlByShortUrl(shortUrl);
+
         System.out.println("******* DB short->long*****");
         System.out.println("[" + shortUrl + "]->[" + (longUrl != null ? longUrl.getLongUrl() : "n/a") + "]");
         System.out.println("------------------");
+
         return Optional.ofNullable((longUrl != null ? longUrl.getLongUrl() : null));
     }
 
