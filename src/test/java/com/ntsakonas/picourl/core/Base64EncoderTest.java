@@ -1,5 +1,6 @@
-package com.ntsakonas.picourl;
+package com.ntsakonas.picourl.core;
 
+import com.ntsakonas.picourl.core.Base62Encoder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,4 +1,6 @@
-package com.ntsakonas.picourl;
+package com.ntsakonas.picourl.core;
+
+import com.ntsakonas.picourl.repository.ShortenedUrlRepository;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.ntsakonas.picourl.HashingHelper.bytesToHexString;
-import static com.ntsakonas.picourl.HashingHelper.stringToBytes;
+import static com.ntsakonas.picourl.core.HashingHelper.bytesToHexString;
+import static com.ntsakonas.picourl.core.HashingHelper.stringToBytes;
 
 public class UrlShortener {
 

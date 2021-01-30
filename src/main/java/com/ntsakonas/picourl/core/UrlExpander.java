@@ -1,4 +1,6 @@
-package com.ntsakonas.picourl;
+package com.ntsakonas.picourl.core;
+
+import com.ntsakonas.picourl.repository.ShortenedUrlRepository;
 
 import java.util.Optional;
 

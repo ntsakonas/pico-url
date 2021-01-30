@@ -1,4 +1,4 @@
-package com.ntsakonas.picourl;
+package com.ntsakonas.picourl.core;
 
 import java.nio.charset.Charset;
 

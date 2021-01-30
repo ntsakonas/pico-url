@@ -1,4 +1,4 @@
-package com.ntsakonas.picourl;
+package com.ntsakonas.picourl.rest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,7 @@
-package com.ntsakonas.picourl;
+package com.ntsakonas.picourl.rest;
 
+import com.ntsakonas.picourl.core.UrlExpander;
+import com.ntsakonas.picourl.core.UrlShortener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

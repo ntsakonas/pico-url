@@ -1,5 +1,6 @@
-package com.ntsakonas.picourl;
+package com.ntsakonas.picourl.core;
 
+import com.ntsakonas.picourl.repository.ShortenedUrlRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
