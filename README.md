@@ -14,7 +14,7 @@ This was implemented in the context of practicing system design as it is one of 
 very basic in system design.
 
 The implementation is trying to satisfy the following requirements:
-- be able to shortne up to 100 million URLs per day
+- be able to shorten up to 100 million URLs per day
 - accept URLs up to 150 characters
 - the shortened URLs must contain only the characters a..z, A..Z and 0..9
 - the shortened URL cannot be deleted or updated and must be retained for 10 years (no expiring before that)
