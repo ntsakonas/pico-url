@@ -23,6 +23,8 @@ import java.util.function.Function;
 @RestController
 public class RestApi {
 
+    private final int MAX_URL_LENGTH = 150;
+
     private final UrlShortener urlShortener;
     private final UrlExpander urlExpander;
     private final String SERVICE_URL;
@@ -34,10 +36,13 @@ public class RestApi {
         this.SERVICE_URL = serviceDomainName;
     }
 
-    @PostMapping(path = "/url",
-            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @PostMapping(path = "/url", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<String> shortenUrl(@RequestParam Map<String, String> requestParameters) {
-        Optional<String> shortUrl = urlShortener.shortenUrl(requestParameters.get("url"));
+        String longUrl = requestParameters.get("url");
+        if (longUrl == null || longUrl.length() > MAX_URL_LENGTH || longUrl.isEmpty() || longUrl.isBlank())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Optional<String> shortUrl = urlShortener.shortenUrl(longUrl);
         urlShortener.stats();
         if (shortUrl.isPresent())
             return new ResponseEntity<>(SERVICE_URL + shortUrl.get(), HttpStatus.CREATED);
