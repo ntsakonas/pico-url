@@ -1,4 +1,4 @@
-package com.ntsakonas.picourl.rest;
+package com.ntsakonas.picourl.api;
 
 import com.ntsakonas.picourl.core.UrlExpander;
 import com.ntsakonas.picourl.core.UrlShortener;
@@ -53,6 +53,5 @@ public class RestApi {
             return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
-
 
 }
