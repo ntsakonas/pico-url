@@ -3,6 +3,7 @@ package com.ntsakonas.picourl.api;
 import com.ntsakonas.picourl.core.UrlExpander;
 import com.ntsakonas.picourl.core.UrlShortener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,19 +18,20 @@ import java.util.function.Function;
 /*
  Rest API to access the URL shortener.
  NOTE: the shortening assumes that the owner has a registered domain that
- is used in the returned URL. For this implementation an unregistered URL is used.
+ is used in the returned URL. For this implementation an unregistered URL is used (http://pico.url/).
  */
 @RestController
 public class RestApi {
 
     private final UrlShortener urlShortener;
     private final UrlExpander urlExpander;
-    private final String HOST = "http://pico.url/";
+    private final String SERVICE_URL;
 
     @Autowired
-    public RestApi(UrlShortener urlShortener, UrlExpander urlExpander) {
+    public RestApi(UrlShortener urlShortener, UrlExpander urlExpander, @Value("${picoshortener.host.domain}") String serviceDomainName) {
         this.urlShortener = urlShortener;
         this.urlExpander = urlExpander;
+        this.SERVICE_URL = serviceDomainName;
     }
 
     @PostMapping(path = "/url",
@@ -38,7 +40,7 @@ public class RestApi {
         Optional<String> shortUrl = urlShortener.shortenUrl(requestParameters.get("url"));
         urlShortener.stats();
         if (shortUrl.isPresent())
-            return new ResponseEntity<>(HOST + shortUrl.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(SERVICE_URL + shortUrl.get(), HttpStatus.CREATED);
         else
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -51,7 +53,7 @@ public class RestApi {
             MultiValueMap<String, String> headers = new HttpHeaders();
             headers.add(HttpHeaders.LOCATION, url);
             return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
-        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 }
