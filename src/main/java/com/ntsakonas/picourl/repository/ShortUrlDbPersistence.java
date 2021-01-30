@@ -14,7 +14,7 @@ import java.util.Set;
  Interface to the database where the information about the shortened urls is saved
  */
 @Repository
-public interface DatabaseRepo extends JpaRepository<ShortenedUrl, Long> {
+public interface ShortUrlDbPersistence extends JpaRepository<ShortenedUrl, Long> {
 
     Set<HashValueOnly> findByHashIn(List<Long> hashValues);
 
