@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /*
  Interface to the database where the information about the shortened urls is saved
@@ -15,7 +16,7 @@ import java.util.List;
 @Repository
 public interface DatabaseRepo extends JpaRepository<ShortenedUrl, Long> {
 
-    List<HashValueOnly> findByHashIn(List<Long> hashValues);
+    Set<HashValueOnly> findByHashIn(List<Long> hashValues);
 
     ShortUrlOnly findShortUrlByLongUrl(String longUrl);
 
