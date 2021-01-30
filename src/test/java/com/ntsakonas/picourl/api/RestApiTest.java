@@ -36,15 +36,16 @@ public class RestApiTest {
 
     @BeforeEach
     void cleanUpInMemPeristence() {
-        // the ShortUrlPersistence instance provided has class lifecycle and should be reset between tests
-        // our configuration is such that an in-mem implementation is provided
-        if (urlPersistence instanceof InMemCache) {
-            ((InMemCache) urlPersistence).reset();
-        } else {
+        // During tests our configuration is such that an in-mem implementation is provided
+        // if something is changed, we need to be aware
+        if (!(urlPersistence instanceof InMemCache)) {
             throw new RuntimeException("Something is wrong in the test configuration. An in-mem instance of ShortUrlPersistence should be provided");
         }
+        // the ShortUrlPersistence instance provided has class lifecycle and should be reset between tests
+        ((InMemCache) urlPersistence).reset();
     }
 
+    /* URL EXPANSION TESTS */
     @Test
     public void testApiResponseOnURLExpansion() throws Exception {
         // add the shortened url mapping
@@ -69,6 +70,7 @@ public class RestApiTest {
                 .andExpect(status().isNotFound());
     }
 
+    /* URL SHORTENING TESTS */
     @Test
     public void testApiResponseOnURLShortening() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
