@@ -1,5 +1,9 @@
 package com.ntsakonas.picourl;
 
+import com.ntsakonas.picourl.core.UrlExpander;
+import com.ntsakonas.picourl.core.UrlShortener;
+import com.ntsakonas.picourl.repository.DatabaseRepo;
+import com.ntsakonas.picourl.repository.ShortenedUrlRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -7,8 +11,8 @@ import org.springframework.stereotype.Component;
 public class BeanFactory {
 
     @Bean
-    public ShortenedUrlRepository getUrlRepository() {
-        return new ShortenedUrlRepository();
+    public ShortenedUrlRepository getUrlRepository(DatabaseRepo dbRepository) {
+        return new ShortenedUrlRepository(dbRepository);
     }
 
     @Bean
